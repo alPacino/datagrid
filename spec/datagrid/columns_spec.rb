@@ -61,15 +61,19 @@ describe Datagrid::Columns do
   end
 
   it "should inherit columns correctly" do
-    parent = Class.new do
+    parent_class = Class.new do
       include Datagrid
       scope { Entry }
       column(:name)
     end
 
-    child = Class.new(parent) do
+    child_class = Class.new(parent_class) do
       column(:group_id)
     end
+
+    parent = parent_class.new
+    child = child_class.new
+
     parent.column_by_name(:name).should_not be_nil
     parent.column_by_name(:group_id).should be_nil
     child.column_by_name(:name).should_not be_nil

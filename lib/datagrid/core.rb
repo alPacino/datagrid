@@ -18,7 +18,7 @@ module Datagrid
 
       def datagrid_attribute(name, &block)
         unless datagrid_attributes.include?(name)
-          block ||= lambda do |value|
+          block ||= lambda do |instance, value|
             value
           end
           datagrid_attributes << name
@@ -27,7 +27,7 @@ module Datagrid
           end
 
           define_method :"#{name}=" do |value|
-            instance_variable_set("@#{name}", block.call(value))
+            instance_variable_set("@#{name}", block.arity == 2 ? block.call(self, value) : block.call(value))
           end
         end
       end

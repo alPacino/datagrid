@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     "lib/datagrid/active_model.rb",
     "lib/datagrid/columns.rb",
     "lib/datagrid/columns/column.rb",
+    "lib/datagrid/columns/header.rb",
     "lib/datagrid/core.rb",
     "lib/datagrid/drivers.rb",
     "lib/datagrid/drivers/abstract_driver.rb",

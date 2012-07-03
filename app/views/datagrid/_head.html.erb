@@ -1,8 +1,10 @@
-<tr>
-  <% grid.columns(*options[:columns]).each do |column| %>
-    <th class="<%= datagrid_column_classes(grid, column) %>">
-      <%= column.header %>
-      <%= datagrid_order_for(grid, column) if column.order && options[:order]%>
-    </th>
-  <% end %>
-</tr>
+<% 0.upto(grid.header_depth - 1) do |level| %>
+  <tr>
+    <% grid.headers.select {|h| h.level == level}.each do |header| %>
+      <th class="<%= datagrid_column_classes(grid, header) %>" <%= "rowspan='#{grid.header_depth - level}'" if grid.header_depth - level > 1 && header.colspan <= 1 %> <%= "colspan='#{header.colspan}'" if header.colspan > 1 %>>
+        <%= header.header %>
+        <%= datagrid_order_for(grid, header) if header.order && options[:order]%>
+      </th>
+    <% end %>
+  </tr>
+<% end %>

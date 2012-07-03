@@ -1,12 +1,13 @@
 class Datagrid::Columns::Column
 
-  attr_accessor :grid, :options, :block, :name
+  attr_accessor :grid, :parent, :options, :block, :name
 
-  def initialize(grid, name, options = {}, &block)
+  def initialize(grid, parent, name, options = {}, &block)
     self.grid = grid
+    self.parent = parent
     self.name = name.to_sym
     self.options = options
-    self.block = block
+    self.block = block if block_given?
     if format
       ::Datagrid::Utils.warn_once(":format column option is deprecated. Use :url or :html option instead.")
     end
@@ -17,6 +18,7 @@ class Datagrid::Columns::Column
   end
 
   def value_for(model, grid)
+    return nil unless self.block
     if self.block.arity == 1
       self.block.call(model)
     elsif self.block.arity == 2
@@ -35,8 +37,7 @@ class Datagrid::Columns::Column
   end
 
   def header
-    self.options[:header] || 
-      I18n.translate(self.name, :scope => "datagrid.#{self.grid.param_name}.columns", :default => self.name.to_s.humanize )
+    self.parent.header
   end
 
   def order
@@ -49,13 +50,13 @@ class Datagrid::Columns::Column
 
   def order_desc
     return nil unless order
-    self.options[:order_desc]  
+    self.options[:order_desc]
   end
 
   def html?
     !! self.options[:html]
   end
-  
+
   def data?
     !html?
   end

@@ -7,3 +7,5 @@ pkg
 wiki
 .rvmrc
 Gemfile.lock
+*.sw*
+*.gem
