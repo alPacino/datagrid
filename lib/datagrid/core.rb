@@ -35,14 +35,7 @@ module Datagrid
       def scope(&block)
         if block
           self.scope_value = block
-        else
-          check_scope_defined!
-          scope_value.call
         end
-      end
-
-      def driver
-        @driver ||= Drivers::AbstractDriver.guess_driver(scope).new
       end
 
       protected
@@ -104,12 +97,12 @@ module Datagrid
           self.scope_value = block
         else
           check_scope_defined!
-          scope_value.call
+          scope_value.arity == 1 ? scope_value.call(self) : scope_value.call
         end
       end
 
       def driver
-        self.class.driver
+        @driver ||= Drivers::AbstractDriver.guess_driver(scope).new
       end
 
       def check_scope_defined!(message = nil)
